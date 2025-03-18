@@ -1,10 +1,15 @@
 import express, { Express, Response } from "express";
 import cors from "cors";
-import { AlunoRoutes } from "./aluno/aluno.routes";
 import { Database } from "./shared/database";
+import { AlunoRoutes } from "./aluno/aluno.routes";
 import { AlunoRepository } from "./aluno/aluno.repository";
 import { AlunoService } from "./aluno/aluno.service";
 import { AlunoController } from "./aluno/aluno.controller";
+// Importação Instrutor
+import { InstrutorRoutes } from "./instrutor/instrurtor.routes";
+import { InstrutorRepository } from "./instrutor/instrutor.repository";
+import { InstrutorService } from "./instrutor/instrutor.service";
+import { InstrutorController } from "./instrutor/instrutor.controller";
 
 class App {
   private readonly PORT = 3000;
@@ -29,9 +34,15 @@ class App {
       res.send({ status: "OK" });
     });
 
+
+
     const alunoRoutes = new AlunoRoutes(this.database);
 
     this._app.use("/alunos", alunoRoutes.getRouter());
+
+    const instrutorRoutes = new InstrutorRoutes(this.database);
+
+    this._app.use("/instrutores", instrutorRoutes.getRouter());
   }
 
   public start() {
