@@ -6,7 +6,7 @@ import { AlunoRepository } from "./aluno/aluno.repository";
 import { AlunoService } from "./aluno/aluno.service";
 import { AlunoController } from "./aluno/aluno.controller";
 // Importação Instrutor
-import { InstrutorRoutes } from "./instrutor/instrurtor.routes";
+import { InstrutorRoutes } from "./instrutor/insturtor.routes";
 import { InstrutorRepository } from "./instrutor/instrutor.repository";
 import { InstrutorService } from "./instrutor/instrutor.service";
 import { InstrutorController } from "./instrutor/instrutor.controller";

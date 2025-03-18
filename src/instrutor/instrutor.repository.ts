@@ -9,7 +9,7 @@ export class InstrutorRepository {
 
   async create(instrutor: Instrutor): Promise<Instrutor> {
     const queryInsertInstrutor = `
-      insert into instrutor (nome, data_nascimento, cpf,
+      insert into instrutores (nome, data_nascimento, cpf,
            matricula, sexo, email, data_admissao,
            data_desligamento)
       values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;
@@ -37,8 +37,8 @@ export class InstrutorRepository {
     const result = await this.database.query(
       `select nome, data_nascimento, cpf,
            matricula, sexo, email, data_admissao,
-           data_desligamento,
-       from instrutor`,
+           data_desligamento
+       from instrutores`,
       []
     );
     if (result.length === 0) {
@@ -62,8 +62,8 @@ export class InstrutorRepository {
     const [result] = await this.database.query(
       `select nome, data_nascimento, cpf,
            matricula, sexo, email, data_admissao,
-           data_desligamento,
-       from instrutor
+           data_desligamento
+       from instrutores
        where id = $1`,
       [id]
     );
@@ -85,7 +85,7 @@ export class InstrutorRepository {
     try {
       // Monta a query de update
       const statementUpdateInstrutor = `
-        update instrutor set
+        update instrutores set
           nome = $1,
           data_nascimento = $2,
           cpf = $3,
