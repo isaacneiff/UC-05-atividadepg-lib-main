@@ -1,5 +1,5 @@
 import { Instrutor } from "../shared/model/instrutor";
-import { instrutorService } from "./instrutor.service";
+import { InstrutorService } from "./instrutor.service";
 import { Request, Response } from "express";
 
 export class InstrutorController {
@@ -20,7 +20,7 @@ export class InstrutorController {
       res.status(201).send(novoInstrutor);
     } catch (error) {
       // Imprime o erro
-      console.log("Error - InstrutorController>createInstrutor", error);
+      console.log("Error - InstrutorController > createInstrutor", error);
       res.status(500).send({ error: true, message: error });
     }
   }
@@ -29,9 +29,9 @@ export class InstrutorController {
   async getInstrutor(_: Request, res: Response) {
     try {
       // Busca os dados no banco
-      const insturtores = await this.service.getAll();
+      const instrutores = await this.service.getAll();
       // Retorna os dados
-      res.status(200).send(insturtores);
+      res.status(200).send(instrutores);
     } catch (error) {
       console.log("Error - InstrutorController>getInstrutor", error);
       res.status(500).send({ error: true, message: error });
@@ -59,16 +59,16 @@ export class InstrutorController {
       }
 
       // Retorna os dados
-      res.status(200).send(aluno);
+      res.status(200).send(instrutor);
     } catch (error) {
-      console.log("Error - AlunoController>getAlunoById", error);
+      console.log("Error - InstrutorController>getInstrutorById", error);
       res.status(500).send({ error: true, message: error });
     }
   }
 
   // CRUD - (U)pdate
-  async updatePartOfAluno(
-    req: Request<{ id: string }, {}, Aluno>,
+  async updatePartOfInstrutor(
+    req: Request<{ id: string }, {}, Instrutor>,
     res: Response
   ) {
     try {
@@ -76,31 +76,31 @@ export class InstrutorController {
       const { id } = req.params;
       // Valida se o id foi informado
       if (!id) {
-        res.status(400).send({ error: true, message: "Informe o ID do aluno" });
+        res.status(400).send({ error: true, message: "Informe o ID do Instrutor" });
         return;
       }
       // Converte o id para number
-      const alunoId = parseInt(id);
+      const instrutorId = parseInt(id);
       // Valida se é um número
-      if (isNaN(alunoId)) {
+      if (isNaN(instrutorId)) {
         res.status(400).send({ error: true, message: "Informe um ID válido" });
         return;
       }
       // Pegar os dados do aluno
-      const aluno = req.body;
+      const instrutor = req.body;
       // Chama o service para atualizar o aluno
-      await this.service.updateAluno(alunoId, aluno);
+      await this.service.updateInstrutor(instrutorId, instrutor);
       // Busca os dados atualizados do aluno e retorna
-      const alunoAtualizado = await this.service.getById(alunoId);
-      res.status(200).send(alunoAtualizado);
+      const instrutorAtualizado = await this.service.getById(instrutorId);
+      res.status(200).send(instrutorAtualizado);
     } catch (error) {
-      console.log("Error - AlunoController>updateAluno", error);
+      console.log("Error - InstrutorController>updateInstrutor", error);
       res.status(500).send({ error: true, message: error });
     }
   }
 
-  async updateAllFieldsAluno(
-    req: Request<{ id: string }, {}, Aluno>,
+  async updateAllFieldsInstrutor(
+    req: Request<{ id: string }, {}, Instrutor>,
     res: Response
   ) {
     try {
@@ -108,31 +108,31 @@ export class InstrutorController {
       const { id } = req.params;
       // Valida se o id foi informado
       if (!id) {
-        res.status(400).send({ error: true, message: "Informe o ID do aluno" });
+        res.status(400).send({ error: true, message: "Informe o ID do instrutor" });
         return;
       }
       // Converte o id para number
-      const alunoId = parseInt(id);
+      const instrutorId = parseInt(id);
       // Valida se é um número
-      if (isNaN(alunoId)) {
+      if (isNaN(instrutorId)) {
         res.status(400).send({ error: true, message: "Informe um ID válido" });
         return;
       }
       // Pegar os dados do aluno
-      const aluno = req.body;
+      const instrutor = req.body;
       // Chama o service para atualizar o aluno
-      await this.service.updateAluno(alunoId, aluno);
+      await this.service.updateInstrutor(instrutorId, instrutor);
 
-      const alunoAtualizado = await this.service.getById(alunoId);
-      res.status(200).send(alunoAtualizado);
-      console.log(alunoAtualizado);
+      const instrutorAtualizado = await this.service.getById(instrutorId);
+      res.status(200).send(instrutorAtualizado);
+      console.log(instrutorAtualizado);
     } catch (error) {
-      console.log("Error - AlunoController>updateAluno", error);
+      console.log("Error - InstrutorController>updateInstrutor", error);
       res.status(500).send({ error: true, message: error });
     }
   }
 
-  async deleteAluno(req: Request<{ id: string }, {}, Aluno>, res: Response) {
+  async deleteInstrutor(req: Request<{ id: string }, {}, Instrutor>, res: Response) {
     try {
       // Pega o id dos parametros de rota
       const { id } = req.params;
@@ -142,19 +142,19 @@ export class InstrutorController {
         return;
       }
       // Converte o id para number
-      const alunoId = parseInt(id);
+      const instrutorId = parseInt(id);
       // Valida se é um número
-      if (isNaN(alunoId)) {
+      if (isNaN(instrutorId)) {
         res.status(400).send({ error: true, message: "Informe um ID válido" });
         return;
       }
       // Pegar os dados do aluno
       const aluno = req.body;
       // Chama o service para atualizar o aluno
-      await this.service.deleteAluno(alunoId);
+      await this.service.deleteInstrutor(instrutorId);
       res.status(200).send();
     } catch (error) {
-      console.log("Error - AlunoController>deleteAluno", error);
+      console.log("Error - InstrutorController>deleteInstrutor", error);
       res.status(500).send({
         error: true,
         message: "Internal Error",
