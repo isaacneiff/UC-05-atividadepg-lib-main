@@ -1,21 +1,21 @@
 import express, { Router } from "express";
-import { AlunoController } from "./instrutor.controller";
-import { AlunoRepository } from "./instrutor.repository";
-import { AlunoService } from "./instrutor.service";
+import { InstrutorController } from "./instrutor.controller";
+import { InstrutorRepository } from "./instrutor.repository";
+import { InstrutorService } from "./instrutor.service";
 
-export class AlunoRoutes {
+export class InstrutorRoutes {
   private database: any;
   private router: Router;
 
-  private alunoRepository: AlunoRepository;
-  private alunoService: AlunoService;
-  private alunoController: AlunoController;
+  private instrutorRepository: InstrutorRepository;
+  private instrutorService: InstrutorService;
+  private instrutorController: InstrutorController;
 
   constructor(database: any) {
     this.database = database;
-    this.alunoRepository = new AlunoRepository(this.database);
-    this.alunoService = new AlunoService(this.alunoRepository);
-    this.alunoController = new AlunoController(this.alunoService);
+    this.instrutorRepository = new InstrutorRepository(this.database);
+    this.instrutorService = new InstrutorService(this.instrutorRepository);
+    this.instrutorController = new InstrutorController(this.instrutorService);
     this.router = express.Router();
     this.configureRoutes();
   }
@@ -23,22 +23,22 @@ export class AlunoRoutes {
   // Cria o repositorio, service, controller e rotas do aluno
   configureRoutes(): void {
     this.router.post("/", (req, res) =>
-      this.alunoController.createAluno(req, res)
+      this.instrutorController.createInstrutor(req, res)
     );
     this.router.get("/", (req, res) =>
-      this.alunoController.getAlunos(req, res)
+      this.instrutorController.getInstrutor(req, res)
     );
     this.router.get("/:id", (req, res) =>
-      this.alunoController.getAlunoById(req, res)
+      this.instrutorController.getInstrutorById(req, res)
     );
     this.router.put("/:id", (req, res) =>
-      this.alunoController.updateAllFieldsAluno(req, res)
+      this.instrutorController.updateAllFieldsInstrutor(req, res)
     );
     this.router.patch("/:id", (req, res) =>
-      this.alunoController.updatePartOfAluno(req, res)
+      this.instrutorController.updatePartOfInstrutor(req, res)
     );
     this.router.delete("/:id", (req, res) =>
-      this.alunoController.deleteAluno(req, res)
+      this.instrutorController.deleteInstrutor(req, res)
     );
   }
 
