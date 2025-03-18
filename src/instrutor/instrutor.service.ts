@@ -8,8 +8,8 @@ export class InstrutorService {
     this.repository = repository;
   }
 
-  async createInstrutor(aluno: Instrutor): Promise<Instrutor> {
-    return await this.repository.create(aluno);
+  async createInstrutor(instrutor: Instrutor): Promise<Instrutor> {
+    return await this.repository.create(instrutor);
   }
 
   async getAll(): Promise<Instrutor[]> {
@@ -29,7 +29,7 @@ export class InstrutorService {
     await this.repository.updateInstrutor(id, instrutor);
   }
 
-  async deleteInstrutor(id: number):Promise<void> {
+  async deleteInstrutor(id: number): Promise<void> {
     await this.repository.delete(id);
   }
 }
