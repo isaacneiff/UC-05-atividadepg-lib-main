@@ -7,37 +7,38 @@ export class InstrutorRepository {
     this.database = database;
   }
 
-  async create(aluno: Aluno): Promise<Aluno> {
-    const queryInsertAlunos = `
-      insert into alunos (nome, data_nascimento, cpf,
-        telefone, sexo, email, escolaridade, renda, pcd)
-      values ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;
+  async create(instrutor: Instrutor): Promise<Instrutor> {
+    const queryInsertInstrutor = `
+      insert into instrutor (nome, data_nascimento, cpf,
+           matricula, sexo, email, data_admissao,
+           data_desligamento)
+      values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;
     `;
 
-    const result = await this.database.one(queryInsertAlunos, [
-      aluno.nome,
-      aluno.dataNascimento,
-      aluno.cpf,
-      aluno.telefone,
-      aluno.sexo,
-      aluno.email,
-      aluno.escolaridade,
-      aluno.renda,
-      aluno.pcd,
+    const result = await this.database.one(queryInsertInstrutor, [
+      instrutor.nome,
+      instrutor.dataNascimento,
+      instrutor.cpf,
+      instrutor.matricula,
+      instrutor.sexo,
+      instrutor.email,
+      instrutor.data_admissao,
+      instrutor.data_desligamento,
+
     ]);
 
     return {
       id: result.id,
-      ...aluno,
+      ...instrutor,
     };
   }
 
-  async getAll(): Promise<Aluno[]> {
+  async getAll(): Promise<Instrutor[]> {
     const result = await this.database.query(
       `select nome, data_nascimento, cpf,
-           telefone, sexo, email, escolaridade,
-           renda, pcd
-       from alunos`,
+           matricula, sexo, email, data_admissao,
+           data_desligamento,
+       from instrutor`,
       []
     );
     if (result.length === 0) {
@@ -57,12 +58,12 @@ export class InstrutorRepository {
     }));
   }
 
-  async getById(id: number): Promise<Aluno | undefined> {
+  async getById(id: number): Promise<Instrutor | undefined> {
     const [result] = await this.database.query(
       `select nome, data_nascimento, cpf,
-           telefone, sexo, email, escolaridade,
-           renda, pcd
-       from alunos
+           matricula, sexo, email, data_admissao,
+           data_desligamento,
+       from instrutor
        where id = $1`,
       [id]
     );
@@ -72,41 +73,38 @@ export class InstrutorRepository {
       nome: result.nome,
       dataNascimento: result.data_nascimento,
       cpf: result.cpf,
-      telefone: result.telefone,
+      matricula: result.matricula,
       sexo: result.sexo,
       email: result.email,
-      escolaridade: result.escolaridade,
-      renda: result.renda,
-      pcd: result.pcd,
+      data_admissao: result.data_admissao,
+      data_desligamento: result.data_desligamento,
     };
   }
 
-  async updateAluno(id: number, aluno: Aluno): Promise<void> {
+  async updateInstrutor(id: number, instrutor: Instrutor): Promise<void> {
     try {
       // Monta a query de update
-      const statementUpdateAluno = `
-        update alunos set
+      const statementUpdateInstrutor = `
+        update instrutor set
           nome = $1,
           data_nascimento = $2,
           cpf = $3,
-          telefone = $4,
+          matricula = $4,
           sexo = $5,
           email = $6,
-          escolaridade = $7,
-          renda = $8,
-          pcd = $9
-        where id = $10
+          data_admissao = $7,
+          data_desligamento = $8,
+        where id = $9
       `;
-      await this.database.query(statementUpdateAluno, [
-        aluno.nome,
-        aluno.dataNascimento,
-        aluno.cpf,
-        aluno.telefone,
-        aluno.sexo,
-        aluno.email,
-        aluno.escolaridade,
-        aluno.renda,
-        aluno.pcd,
+      await this.database.query(statementUpdateInstrutor, [
+        instrutor.nome,
+        instrutor.dataNascimento,
+        instrutor.cpf,
+        instrutor.matricula,
+        instrutor.sexo,
+        instrutor.email,
+        instrutor.data_admissao,
+        instrutor.data_desligamento,
         id,
       ]);
     } catch (error) {
@@ -114,58 +112,56 @@ export class InstrutorRepository {
     }
   }
 
-  async updatePartOfAluno(id: number, aluno: Aluno): Promise<void> {
+  async updatePartOfInstrutor(id: number, instrutor: Instrutor): Promise<void> {
     try {
       // Obter os dados do aluno do banco
       const saved = await this.getById(id);
       if (!saved) {
-        throw new Error("Aluno não encontrado");
+        throw new Error("Instrutor não encontrado");
       }
 
-      let alunoParams: Aluno = {} as Aluno;
+      let instrutorParams: Instrutor = {} as Instrutor;
 
       // Nome
-      alunoParams.nome = saved.nome !== aluno.nome ? aluno.nome : saved.nome;
+      instrutorParams.nome = saved.nome !== instrutor.nome ? instrutor.nome : saved.nome;
       // DataNascimento
-      alunoParams.dataNascimento =
-        saved.dataNascimento !== aluno.dataNascimento
-          ? aluno.dataNascimento
+      instrutorParams.dataNascimento =
+        saved.dataNascimento !== instrutor.dataNascimento
+          ? instrutor.dataNascimento
           : saved.dataNascimento;
       // CPF
-      alunoParams.cpf = saved.cpf !== aluno.cpf ? aluno.cpf : saved.cpf;
-      // Telefone
-      aluno.telefone =
-        saved.telefone !== aluno.telefone ? aluno.telefone : saved.telefone;
+      instrutorParams.cpf = saved.cpf !== instrutor.cpf ? instrutor.cpf : saved.cpf;
+      // Matricula
+      instrutor.matricula =
+        saved.matricula !== instrutor.matricula ? instrutor.matricula : saved.matricula;
       // Sexo
-      alunoParams.sexo = saved.sexo !== aluno.sexo ? aluno.sexo : saved.sexo;
+      instrutorParams.sexo = saved.sexo !== instrutor.sexo ? instrutor.sexo : saved.sexo;
       // Email
-      alunoParams.email =
-        saved.email !== aluno.email ? aluno.email : saved.email;
-      // Escolaridade
-      alunoParams.escolaridade =
-        saved.escolaridade !== aluno.escolaridade
-          ? aluno.escolaridade
-          : saved.escolaridade;
-      // Renda
-      alunoParams.renda =
-        saved.renda !== aluno.renda ? aluno.renda : saved.renda;
-      // PCD
-      alunoParams.pcd = saved.pcd !== aluno.pcd ? aluno.pcd : saved.pcd;
+      instrutorParams.email =
+        saved.email !== instrutor.email ? instrutor.email : saved.email;
+      // Data
+      instrutorParams.data_admissao =
+        saved.data_admissao !== instrutor.data_admissao
+          ? instrutor.data_admissao
+          : saved.data_admissao;
+      // Data de desligamento
+      instrutorParams.data_desligamento =
+        saved.data_desligamento !== instrutor.data_desligamento ? instrutor.data_desligamento : saved.data_desligamento;
 
-      this.updateAluno(id, alunoParams);
+      this.updateInstrutor(id, instrutorParams);
     } catch (error) {
       throw error;
     }
   }
 
   async delete(id: number) {
-    const aluno = await this.getById(id);
+    const instrutor = await this.getById(id);
 
-    if (!aluno) {
-      throw new Error("Aluno não encontrado");
+    if (!instrutor) {
+      throw new Error("Instrutor não encontrado");
     }
     // Monta a query de exclusão
-    const statementDeleteAlunos = `delete from alunos where id = $1`;
-    await this.database.query(statementDeleteAlunos, [id]);
+    const statementDeleteInstrutores = `delete from instrutor where id = $1`;
+    await this.database.query(statementDeleteInstrutores, [id]);
   }
 }
